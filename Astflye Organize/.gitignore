@@ -1,0 +1,28 @@
+# Secrets
+server/.env
+app/.env
+.env
+
+# Binaries
+server/astflye-server
+server/astflye-server.exe
+app/build/
+
+# DB
+data/
+*.db
+
+# Node
+node_modules/
+app/frontend/.next/
+app/frontend/out/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Superpowers (brainstorm visuals)
+.superpowers/
+
+# Worktrees
+.worktrees/
