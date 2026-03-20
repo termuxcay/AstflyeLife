@@ -4,6 +4,7 @@
   "outputfilename": "astflye-app",
   "frontend:install": "npm install",
   "frontend:build": "npm run build",
+  "frontend:dir": "frontend",
   "frontend:dev:watcher": "npm run dev",
   "frontend:dev:serverUrl": "auto",
   "author": {
