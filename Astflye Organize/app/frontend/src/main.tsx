@@ -6,6 +6,10 @@ import { useAuthStore } from '@/store/auth'
 import LoginPage from '@/pages/LoginPage'
 import DashboardLayout from '@/components/layout/DashboardLayout'
 import DashboardPage from '@/pages/DashboardPage'
+import TasksPage from '@/pages/TasksPage'
+import NewTaskPage from '@/pages/NewTaskPage'
+import FinancePage from '@/pages/FinancePage'
+import NewTransactionPage from '@/pages/NewTransactionPage'
 import './index.css'
 
 const queryClient = new QueryClient()
@@ -28,6 +32,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                 <DashboardLayout>
                   <Routes>
                     <Route index element={<DashboardPage />} />
+                    <Route path="tasks" element={<TasksPage />} />
+                    <Route path="tasks/new" element={<NewTaskPage />} />
+                    <Route path="finance" element={<FinancePage />} />
+                    <Route path="finance/new" element={<NewTransactionPage />} />
                   </Routes>
                 </DashboardLayout>
               </ProtectedRoute>
