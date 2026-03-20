@@ -64,7 +64,9 @@ astflye-life/
 │   │   ├── user.go
 │   │   ├── task.go
 │   │   ├── finance.go
-│   │   └── message.go
+│   │   ├── message.go
+│   │   ├── team.go
+│   │   └── refresh_token.go
 │   ├── middleware/
 │   │   ├── auth.go               # JWT validation
 │   │   └── ratelimit.go
@@ -205,9 +207,13 @@ astflye-life/
    → MEMBER: upsert User record in SQLite
 9. Server issues JWT (24h access token, signed with JWT_SECRET)
    + refresh token (30d, hashed and stored in RefreshToken table)
-10. Both tokens returned to desktop app, stored in memory only (never on disk)
-11. All API requests: Authorization: Bearer <access_token>
-12. When access token expires: POST /auth/refresh with refresh token → new access token
+10. Server redirects browser to: http://localhost:34115/auth/done?token=<jwt>&refresh=<refresh>
+    The Wails app's embedded Go process has a temporary HTTP listener on port 34115 waiting for this callback.
+11. Wails handler receives tokens, stores both in memory (never written to disk), closes the listener
+12. Browser tab can be closed; app is now authenticated
+13. All API requests: Authorization: Bearer <access_token>
+14. When access token expires: POST /auth/refresh with refresh token → new access token
+15. On logout: POST /auth/logout → server deletes RefreshToken row → both tokens discarded in app memory
 ```
 
 **Security constraints:**
@@ -223,7 +229,8 @@ astflye-life/
 ```
 # Auth
 GET    /auth/callback              Discord OAuth callback + guild check (GET — browser redirect)
-POST   /auth/refresh               Refresh JWT
+POST   /auth/refresh               Refresh JWT (returns new access token)
+POST   /auth/logout                Revoke refresh token (deletes RefreshToken row)
 
 # Users
 GET    /users/me                   Current user profile
