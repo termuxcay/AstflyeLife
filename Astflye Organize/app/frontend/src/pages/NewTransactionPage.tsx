@@ -12,8 +12,8 @@ export default function NewTransactionPage() {
   const createTx = useCreateTransaction()
   const [form, setForm] = useState<{
     type: 'income' | 'expense'; amount: string; category: string;
-    description: string; recurring: boolean; frequency: string;
-  }>({ type: 'expense', amount: '', category: 'food', description: '', recurring: false, frequency: 'once' })
+    description: string; recurring: boolean; currency: string; date: string;
+  }>({ type: 'expense', amount: '', category: 'food', description: '', recurring: false, currency: 'BRL', date: new Date().toISOString().slice(0, 10) })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

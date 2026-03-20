@@ -18,18 +18,19 @@ function StatCard({ label, value, sub, color, delay, icon }: {
         color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 8,
       }}>{label}</p>
       <p style={{
-        fontFamily: 'var(--font-display)', fontSize: 28, fontWeight: 800,
-        color, lineHeight: 1, marginBottom: 4,
+        fontFamily: 'var(--font-display)', fontSize: 32, fontWeight: 800,
+        color, lineHeight: 1, marginBottom: 6,
         textShadow: `0 0 20px ${color}66`,
       }}>{value}</p>
-      <p style={{ fontSize: 11, color: 'var(--muted)', fontFamily: 'var(--font-body)' }}>{sub}</p>
+      <p style={{ fontSize: 12, color: 'var(--muted)', fontFamily: 'var(--font-body)' }}>{sub}</p>
     </div>
   )
 }
 
 export default function DashboardPage() {
-  const { data: me } = useMe()
-  const { data: todayTasks } = useTasks({ recurrence: 'daily' })
+  const me = useMe()
+  const { data: allTasks } = useTasks()
+  const todayTasks = allTasks?.filter(t => t.recurrence === 'daily')
   const { data: summary } = useSummary('monthly')
 
   const completed = todayTasks?.filter(t => t.status === 'completed').length ?? 0
@@ -38,7 +39,7 @@ export default function DashboardPage() {
   const balance = summary?.balance ?? 0
 
   return (
-    <div style={{ maxWidth: 720, margin: '0 auto' }}>
+    <div style={{ maxWidth: 860, margin: '0 auto' }}>
 
       {/* Header */}
       <div className="anim-fade-up" style={{ marginBottom: 32 }}>
@@ -53,22 +54,22 @@ export default function DashboardPage() {
           </span>
         </div>
         <h1 style={{
-          fontFamily: 'var(--font-display)', fontSize: 26, fontWeight: 700,
-          color: 'var(--text)', letterSpacing: '-0.01em',
+          fontFamily: 'var(--font-display)', fontSize: 32, fontWeight: 800,
+          color: 'var(--text)', letterSpacing: '-0.02em',
         }}>
-          Hey, <span style={{ color: 'var(--primary)', textShadow: '0 0 20px rgba(180,85,255,0.5)' }}>
-            {me?.username ?? '...'}
+          Hey, <span style={{ color: 'var(--primary)', textShadow: '0 0 24px rgba(180,85,255,0.6)' }}>
+            {me?.global_name || me?.username || '...'}
           </span> 👋
         </h1>
-        <p style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>Here's your day at a glance.</p>
+        <p style={{ fontSize: 14, color: 'var(--muted)', marginTop: 6 }}>Aqui está o seu dia de hoje.</p>
       </div>
 
       {/* Stat cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 20 }}>
         <StatCard
           label="Streak" delay="0.1s"
-          value={me?.current_streak ?? 0}
-          sub={`best: ${me?.longest_streak ?? 0} days`}
+          value={0}
+          sub="best: 0 days"
           color="var(--primary)"
           icon={<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M13.5 0.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67z"/></svg>}
         />

@@ -1,5 +1,12 @@
 import { create } from 'zustand'
-import { Message } from '@/hooks/useSocial'
+
+interface Message {
+  id: string
+  content: string
+  user_id: string
+  team_id: string
+  created_at: string
+}
 
 interface ChatState {
   messages: Record<string, Message[]> // teamID -> messages

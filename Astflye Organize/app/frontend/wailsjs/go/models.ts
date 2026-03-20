@@ -1,11 +1,11 @@
 export namespace main {
-  export class FinanceSummary {
+  export interface FinanceSummary {
     income: number;
     expenses: number;
     balance: number;
     period: string;
   }
-  export class Task {
+  export interface Task {
     id: string;
     user_discord_id: string;
     title: string;
@@ -18,7 +18,7 @@ export namespace main {
     completed_at: string;
     created_at: string;
   }
-  export class TaskInput {
+  export interface TaskInput {
     title: string;
     description: string;
     status: string;
@@ -27,7 +27,7 @@ export namespace main {
     recurrence: string;
     due_date: string;
   }
-  export class Transaction {
+  export interface Transaction {
     id: string;
     user_discord_id: string;
     type: string;
@@ -39,7 +39,7 @@ export namespace main {
     date: string;
     created_at: string;
   }
-  export class TransactionInput {
+  export interface TransactionInput {
     type: string;
     amount: number;
     currency: string;

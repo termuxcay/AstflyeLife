@@ -9,8 +9,8 @@ export default function NewTaskPage() {
   type Priority = 'low' | 'medium' | 'high' | 'urgent'
   type Recurrence = 'none' | 'daily' | 'weekly' | 'monthly' | 'yearly'
   const [form, setForm] = useState<{
-    title: string; description: string; priority: Priority; recurrence: Recurrence; category: string;
-  }>({ title: '', description: '', priority: 'medium', recurrence: 'none', category: '' })
+    title: string; description: string; status: string; priority: Priority; recurrence: Recurrence; category: string; due_date: string;
+  }>({ title: '', description: '', status: 'pending', priority: 'medium', recurrence: 'none', category: '', due_date: '' })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()

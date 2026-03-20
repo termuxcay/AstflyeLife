@@ -1,52 +1,36 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { apiFetch } from '@/lib/api'
+import { api } from '@/lib/api'
+import type { main } from '../../wailsjs/go/models'
 
-export interface Transaction {
-  id: string
-  type: 'income' | 'expense'
-  amount: number
-  currency: string
-  category: string
-  description?: string
-  recurring: boolean
-  date: string
-  created_at: string
-}
+export type Transaction = main.Transaction
+export type TransactionInput = main.TransactionInput
+export type Summary = main.FinanceSummary
 
-export interface Summary {
-  income: number
-  expenses: number
-  balance: number
-  period: string
-}
-
-export function useTransactions(filters?: Record<string, string>) {
-  const params = filters ? new URLSearchParams(filters).toString() : ''
+export function useTransactions() {
   return useQuery<Transaction[]>({
-    queryKey: ['transactions', filters],
-    queryFn: () => apiFetch(`/finance/transactions${params ? '?' + params : ''}`),
+    queryKey: ['transactions'],
+    queryFn: () => api.getTransactions(),
   })
 }
 
-export function useSummary(period = 'monthly') {
+export function useSummary(period = 'all') {
   return useQuery<Summary>({
     queryKey: ['summary', period],
-    queryFn: () => apiFetch(`/finance/summary?period=${period}`),
+    queryFn: () => api.getFinanceSummary(period),
   })
 }
 
 export function useCategories() {
-  return useQuery({
+  return useQuery<string[]>({
     queryKey: ['categories'],
-    queryFn: () => apiFetch('/finance/categories'),
+    queryFn: () => api.getCategories(),
   })
 }
 
 export function useCreateTransaction() {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: (data: Partial<Transaction>) =>
-      apiFetch('/finance/transactions', { method: 'POST', body: JSON.stringify(data) }),
+    mutationFn: (input: TransactionInput) => api.createTransaction(input),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['transactions'] })
       qc.invalidateQueries({ queryKey: ['summary'] })
@@ -58,7 +42,7 @@ export function useCreateTransaction() {
 export function useDeleteTransaction() {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: (id: string) => apiFetch(`/finance/transactions/${id}`, { method: 'DELETE' }),
+    mutationFn: (id: string) => api.deleteTransaction(id),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['transactions'] })
       qc.invalidateQueries({ queryKey: ['summary'] })

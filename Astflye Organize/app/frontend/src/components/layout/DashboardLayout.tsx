@@ -9,7 +9,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <Sidebar />
       <main style={{
         flex: 1, overflowY: 'auto', overflowX: 'hidden',
-        padding: '28px 32px',
+        padding: '36px 48px',
         position: 'relative', zIndex: 1,
       }}>
         {children}

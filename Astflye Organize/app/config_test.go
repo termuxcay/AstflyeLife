@@ -7,6 +7,9 @@ import (
 )
 
 func TestLoadConfig_MissingRequired(t *testing.T) {
+	// Point APPDATA to a temp dir so no .env file is loaded from disk.
+	tmp := t.TempDir()
+	t.Setenv("APPDATA", tmp)
 	for _, k := range []string{"DISCORD_CLIENT_ID", "DISCORD_CLIENT_SECRET", "DISCORD_GUILD_ID", "DISCORD_REDIRECT_URI"} {
 		os.Unsetenv(k)
 	}

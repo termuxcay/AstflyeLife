@@ -1,17 +1,24 @@
 import { create } from 'zustand'
 
+export interface StoredUser {
+  username: string
+  globalName: string
+  avatar: string
+  discordId: string
+}
+
 interface AuthState {
   accessToken: string | null
-  refreshToken: string | null
-  setTokens: (access: string, refresh: string) => void
+  user: StoredUser | null
+  setTokens: (access: string, user: StoredUser) => void
   clear: () => void
   isAuthenticated: () => boolean
 }
 
 export const useAuthStore = create<AuthState>((set, get) => ({
   accessToken: null,
-  refreshToken: null,
-  setTokens: (access, refresh) => set({ accessToken: access, refreshToken: refresh }),
-  clear: () => set({ accessToken: null, refreshToken: null }),
-  isAuthenticated: () => get().accessToken !== null,
+  user: null,
+  setTokens: (access, user) => set({ accessToken: access, user }),
+  clear: () => set({ accessToken: null, user: null }),
+  isAuthenticated: () => !!get().accessToken,
 }))

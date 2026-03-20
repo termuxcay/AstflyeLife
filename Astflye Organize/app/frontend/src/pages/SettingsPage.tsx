@@ -1,6 +1,6 @@
+import { useNavigate } from 'react-router-dom'
 import { useMe } from '@/hooks/useMe'
 import { useAuthStore } from '@/store/auth'
-import { apiFetch } from '@/lib/api'
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <div style={{
@@ -18,13 +18,14 @@ const Section = ({ title, children }: { title: string; children: React.ReactNode
 )
 
 export default function SettingsPage() {
-  const { data: me } = useMe()
+  const me = useMe()
   const clear = useAuthStore((s) => s.clear)
+  const navigate = useNavigate()
 
   const handleLogout = async () => {
-    try { await apiFetch('/auth/logout', { method: 'POST' }) } catch {}
+    await window.go?.main.App.Logout()
     clear()
-    window.location.href = '/login'
+    navigate('/login')
   }
 
   return (
@@ -40,8 +41,8 @@ export default function SettingsPage() {
         <div className="anim-fade-up delay-1">
           <Section title="Profile">
             <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-              {me?.avatar_url ? (
-                <img src={me.avatar_url} alt="avatar" style={{
+              {me?.avatar ? (
+                <img src={me.avatar} alt="avatar" style={{
                   width: 52, height: 52, borderRadius: '50%',
                   border: '2px solid rgba(180,85,255,0.3)',
                   boxShadow: '0 0 16px rgba(180,85,255,0.15)',
@@ -73,8 +74,8 @@ export default function SettingsPage() {
           <Section title="Streak Stats">
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
               {[
-                { label: 'Current Streak', value: `${me?.current_streak ?? 0} days`, color: 'var(--primary)' },
-                { label: 'Best Streak',    value: `${me?.longest_streak ?? 0} days`, color: 'var(--accent)' },
+                { label: 'Current Streak', value: '0 days', color: 'var(--primary)' },
+                { label: 'Best Streak',    value: '0 days', color: 'var(--accent)' },
               ].map(s => (
                 <div key={s.label} style={{
                   padding: '12px', borderRadius: 8,

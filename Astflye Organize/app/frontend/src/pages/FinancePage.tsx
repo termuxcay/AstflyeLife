@@ -21,20 +21,20 @@ export default function FinancePage() {
       background: 'var(--surface)', border: '1px solid rgba(180,85,255,0.1)',
       backdropFilter: 'blur(8px)',
     }}>
-      <p style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.12em', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 6 }}>{label}</p>
-      <p style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 700, color, textShadow: `0 0 16px ${color}55`, lineHeight: 1 }}>
+      <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.14em', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 8 }}>{label}</p>
+      <p style={{ fontFamily: 'var(--font-display)', fontSize: 24, fontWeight: 800, color, textShadow: `0 0 16px ${color}55`, lineHeight: 1 }}>
         R${value.toFixed(2)}
       </p>
     </div>
   )
 
   return (
-    <div style={{ maxWidth: 700, margin: '0 auto' }}>
+    <div style={{ maxWidth: 820, margin: '0 auto' }}>
       {/* Header */}
-      <div className="anim-fade-up" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+      <div className="anim-fade-up" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28 }}>
         <div>
-          <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.12em', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 4 }}>finance</p>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 700, color: 'var(--text)' }}>Finance</h1>
+          <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.15em', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 6 }}>finanças</p>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 30, fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.02em' }}>Finanças</h1>
         </div>
         <Link to="/finance/new" style={{
           padding: '8px 18px', borderRadius: 8, textDecoration: 'none',

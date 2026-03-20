@@ -1,20 +1,19 @@
-import { useQuery } from '@tanstack/react-query'
-import { apiFetch } from '@/lib/api'
+import { useAuthStore } from '@/store/auth'
 
 export interface User {
-  id: string
+  discord_id: string
   username: string
+  global_name: string
   avatar: string
-  avatar_url?: string
-  discord_id?: string
-  current_streak: number
-  longest_streak: number
 }
 
-export function useMe() {
-  return useQuery<User>({
-    queryKey: ['me'],
-    queryFn: () => apiFetch('/users/me'),
-    staleTime: 5 * 60 * 1000,
-  })
+export function useMe(): User | null {
+  const user = useAuthStore((s) => s.user)
+  if (!user) return null
+  return {
+    discord_id: user.discordId,
+    username: user.username,
+    global_name: user.globalName,
+    avatar: user.avatar,
+  }
 }

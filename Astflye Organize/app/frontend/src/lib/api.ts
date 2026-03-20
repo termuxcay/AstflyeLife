@@ -1,25 +1,28 @@
-import { useAuthStore } from '@/store/auth'
+// Wails bridge wrapper — no HTTP fetch.
+// All calls go through window.go.main.App.* (Wails IPC).
 
-const SERVER_URL = import.meta.env.VITE_SERVER_URL ?? 'http://localhost:3005'
+import {
+  GetTasks, CreateTask, UpdateTask, UpdateTaskStatus, DeleteTask,
+  GetTransactions, CreateTransaction, UpdateTransaction, DeleteTransaction,
+  GetFinanceSummary, GetCategories,
+} from '../../wailsjs/go/main/App'
+import type { main } from '../../wailsjs/go/models'
 
-export async function apiFetch<T>(
-  path: string,
-  options: RequestInit = {}
-): Promise<T> {
-  const token = useAuthStore.getState().accessToken
-  const headers: HeadersInit = {
-    'Content-Type': 'application/json',
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    ...options.headers,
-  }
-  const res = await fetch(`${SERVER_URL}${path}`, { ...options, headers })
-  if (res.status === 401) {
-    useAuthStore.getState().clear()
-    throw new Error('Unauthorized')
-  }
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({}))
-    throw new Error((err as { error?: string }).error ?? `HTTP ${res.status}`)
-  }
-  return res.json()
+export type { main }
+
+export const api = {
+  // Tasks
+  getTasks: () => GetTasks(),
+  createTask: (input: main.TaskInput) => CreateTask(input),
+  updateTask: (id: string, input: main.TaskInput) => UpdateTask(id, input),
+  updateTaskStatus: (id: string, status: string) => UpdateTaskStatus(id, status),
+  deleteTask: (id: string) => DeleteTask(id),
+
+  // Finance
+  getTransactions: () => GetTransactions(),
+  createTransaction: (input: main.TransactionInput) => CreateTransaction(input),
+  updateTransaction: (id: string, input: main.TransactionInput) => UpdateTransaction(id, input),
+  deleteTransaction: (id: string) => DeleteTransaction(id),
+  getFinanceSummary: (period = 'all') => GetFinanceSummary(period),
+  getCategories: () => GetCategories(),
 }

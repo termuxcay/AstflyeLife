@@ -7,17 +7,20 @@ const FILTERS = ['all', 'pending', 'in_progress', 'completed', 'skipped']
 
 export default function TasksPage() {
   const [filter, setFilter] = useState<string | undefined>()
-  const { data: tasks, isLoading } = useTasks(filter ? { status: filter } : undefined)
+  const { data: allTasks, isLoading } = useTasks()
+  const tasks = filter && filter !== 'all'
+    ? allTasks?.filter(t => t.status === filter)
+    : allTasks
   const updateStatus = useUpdateTaskStatus()
   const deleteTask = useDeleteTask()
 
   return (
-    <div style={{ maxWidth: 680, margin: '0 auto' }}>
+    <div style={{ maxWidth: 820, margin: '0 auto' }}>
       {/* Header */}
-      <div className="anim-fade-up" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
+      <div className="anim-fade-up" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 28 }}>
         <div>
-          <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.12em', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 4 }}>tasks</p>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 700, color: 'var(--text)' }}>My Tasks</h1>
+          <p style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.15em', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 6 }}>tasks</p>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 30, fontWeight: 800, color: 'var(--text)', letterSpacing: '-0.02em' }}>Minhas Tarefas</h1>
         </div>
         <Link to="/tasks/new" style={{
           padding: '8px 18px', borderRadius: 8, textDecoration: 'none',

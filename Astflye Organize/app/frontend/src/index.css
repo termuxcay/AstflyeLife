@@ -39,11 +39,15 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-body);
-  font-size: 14px;
-  line-height: 1.6;
+  font-size: 15px;
+  line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
   overflow-x: hidden;
+}
+
+#root {
+  height: 100vh;
 }
 
 /* ── Scrollbar ──────────────────────────────────────────────── */
@@ -204,10 +208,10 @@ body::after {
   background: rgba(13, 8, 24, 0.8);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 8px 12px;
+  padding: 10px 14px;
   color: var(--text);
   font-family: var(--font-body);
-  font-size: 14px;
+  font-size: 15px;
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   width: 100%;
@@ -222,7 +226,7 @@ select.input-neon option { background: #0d0818; }
 /* ── Stat card ──────────────────────────────────────────────── */
 .stat-card {
   position: relative;
-  padding: 16px;
+  padding: 20px 18px;
   border-radius: 12px;
   background: var(--surface);
   border: 1px solid var(--border);

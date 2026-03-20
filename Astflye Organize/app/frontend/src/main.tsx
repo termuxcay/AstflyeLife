@@ -11,10 +11,20 @@ import NewTaskPage from '@/pages/NewTaskPage'
 import FinancePage from '@/pages/FinancePage'
 import NewTransactionPage from '@/pages/NewTransactionPage'
 import SocialPage from '@/pages/SocialPage'
-import SettingsPage from '@/pages/SettingsPage'
+import ProfilePage from '@/pages/ProfilePage'
 import './index.css'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: (failureCount, error) => {
+        if ((error as Error)?.message === 'Unauthorized') return false
+        return failureCount < 2
+      },
+      refetchOnWindowFocus: false,
+    },
+  },
+})
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuth = useAuthStore((s) => s.isAuthenticated())
@@ -39,7 +49,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                     <Route path="finance" element={<FinancePage />} />
                     <Route path="finance/new" element={<NewTransactionPage />} />
                     <Route path="social" element={<SocialPage />} />
-                    <Route path="settings" element={<SettingsPage />} />
+                    <Route path="profile" element={<ProfilePage />} />
                   </Routes>
                 </DashboardLayout>
               </ProtectedRoute>
