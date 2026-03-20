@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuthStore } from '@/store/auth'
+import { WindowMinimise, WindowMaximise, WindowHide } from '../../wailsjs/runtime/runtime'
 
 declare global {
   interface Window {
@@ -111,9 +112,37 @@ export default function LoginPage() {
 
   return (
     <div style={{
-      minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center',
+      minHeight: '100vh', display: 'flex', flexDirection: 'column',
       background: 'var(--bg)', position: 'relative', overflow: 'hidden',
     }}>
+      {/* Frameless titlebar */}
+      <div className="titlebar-drag" style={{
+        height: 36, flexShrink: 0, zIndex: 100,
+        display: 'flex', alignItems: 'center', justifyContent: 'flex-end',
+        padding: '0 8px',
+        position: 'relative',
+      }}>
+        <div style={{ display: 'flex', gap: 4 }}>
+          {([
+            { fn: WindowMinimise, icon: <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="5.5" width="10" height="1.5" rx="0.75" fill="currentColor"/></svg>, title: 'Minimizar', hoverBg: 'rgba(180,85,255,0.12)', hoverColor: 'var(--text)' },
+            { fn: WindowMaximise, icon: <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><rect x="1" y="1" width="9" height="9" rx="1.5" stroke="currentColor" strokeWidth="1.3"/></svg>, title: 'Maximizar', hoverBg: 'rgba(180,85,255,0.12)', hoverColor: 'var(--text)' },
+            { fn: WindowHide,     icon: <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 1l9 9M10 1L1 10" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg>, title: 'Fechar', hoverBg: 'rgba(255,51,102,0.15)', hoverColor: '#ff3366' },
+          ] as const).map(({ fn, icon, title, hoverBg, hoverColor }) => (
+            <button key={title} onClick={fn} title={title} style={{
+              width: 26, height: 20, borderRadius: 4, border: 'none',
+              background: 'transparent', color: 'rgba(180,85,255,0.3)', cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              transition: 'all 0.15s',
+            }}
+              onMouseEnter={e => { e.currentTarget.style.background = hoverBg; e.currentTarget.style.color = hoverColor }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'rgba(180,85,255,0.3)' }}
+            >{icon}</button>
+          ))}
+        </div>
+      </div>
+
+      {/* Content wrapper */}
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
       {/* Canvas starfield */}
       <canvas ref={canvasRef} style={{ position: 'absolute', inset: 0, zIndex: 0 }} />
 
@@ -261,6 +290,7 @@ export default function LoginPage() {
         <p style={{ marginTop: 14, fontSize: 11, color: 'var(--muted2)', fontFamily: 'var(--font-mono)' }}>
           Acesso restrito — membro do servidor
         </p>
+      </div>
       </div>
     </div>
   )
