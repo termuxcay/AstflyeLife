@@ -1,78 +1,121 @@
 import type { Task } from '@/hooks/useTasks'
 
-const priorityColors: Record<string, string> = {
-  low: '#555577', medium: '#776688', high: '#b455ff', urgent: '#ff55aa',
-}
-const statusColors: Record<string, string> = {
-  pending: '#776688', in_progress: '#b455ff', completed: '#00cc77', skipped: '#444',
+const PRIORITY_STYLE: Record<string, { bg: string; color: string; label: string }> = {
+  low:    { bg: 'rgba(0,232,122,0.1)',   color: '#00e87a', label: 'low' },
+  medium: { bg: 'rgba(180,85,255,0.1)',  color: '#b455ff', label: 'med' },
+  high:   { bg: 'rgba(255,170,0,0.12)',  color: '#ffaa00', label: 'high' },
+  urgent: { bg: 'rgba(255,51,102,0.12)', color: '#ff3366', label: '!!!' },
 }
 
-interface Props {
+const RECUR_ICON: Record<string, string> = {
+  daily: '↻', weekly: '⟳', monthly: '⊙', yearly: '◎',
+}
+
+export function TaskCard({ task, onStatusChange, onDelete }: {
   task: Task
   onStatusChange: (id: string, status: string) => void
   onDelete: (id: string) => void
-}
+}) {
+  const done = task.status === 'completed'
+  const p = PRIORITY_STYLE[task.priority] ?? PRIORITY_STYLE.medium
 
-export function TaskCard({ task, onStatusChange, onDelete }: Props) {
-  const isCompleted = task.status === 'completed'
   return (
-    <div
-      className="flex items-center gap-3 p-3 rounded-lg transition-all"
-      style={{
-        background: '#110820',
-        border: `1px solid ${isCompleted ? '#00cc7733' : '#b455ff22'}`,
-        opacity: isCompleted ? 0.6 : 1,
-      }}
+    <div style={{
+      display: 'flex', alignItems: 'center', gap: 12,
+      padding: '12px 14px', borderRadius: 10,
+      background: done ? 'rgba(10,6,18,0.4)' : 'var(--surface)',
+      border: `1px solid ${done ? 'rgba(180,85,255,0.06)' : 'rgba(180,85,255,0.12)'}`,
+      transition: 'all 0.2s ease',
+      animation: 'fadeUp 0.3s ease both',
+      backdropFilter: 'blur(8px)',
+    }}
+      onMouseEnter={e => { e.currentTarget.style.borderColor = done ? 'rgba(180,85,255,0.1)' : 'rgba(180,85,255,0.3)' }}
+      onMouseLeave={e => { e.currentTarget.style.borderColor = done ? 'rgba(180,85,255,0.06)' : 'rgba(180,85,255,0.12)' }}
     >
+      {/* Complete toggle */}
       <button
         aria-label="complete"
-        onClick={() => onStatusChange(task.id, isCompleted ? 'pending' : 'completed')}
-        className="w-5 h-5 rounded-full border-2 flex-shrink-0 transition-all cursor-pointer"
+        onClick={() => onStatusChange(task.id, done ? 'pending' : 'completed')}
         style={{
-          borderColor: statusColors[task.status] ?? '#776688',
-          background: isCompleted ? '#00cc77' : 'transparent',
+          width: 22, height: 22, borderRadius: '50%', flexShrink: 0,
+          border: `1.5px solid ${done ? 'var(--green)' : 'rgba(180,85,255,0.4)'}`,
+          background: done ? 'rgba(0,232,122,0.15)' : 'transparent',
+          cursor: 'pointer',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          transition: 'all 0.2s ease',
+          boxShadow: done ? '0 0 8px rgba(0,232,122,0.3)' : 'none',
         }}
-      />
-      <div className="flex-1 min-w-0">
-        <p
-          className="text-sm font-medium truncate"
-          style={{ color: '#e0d0ff', textDecoration: isCompleted ? 'line-through' : 'none' }}
-        >
-          {task.title}
-        </p>
-        <div className="flex items-center gap-2 mt-1">
-          <span
-            className="text-xs px-2 py-0.5 rounded-full"
-            style={{
-              background: (priorityColors[task.priority] ?? '#776688') + '33',
-              color: priorityColors[task.priority] ?? '#776688',
-            }}
-          >
-            {task.priority}
-          </span>
+      >
+        {done && (
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+            <path d="M2 5l2.5 2.5L8 3" stroke="#00e87a" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        )}
+      </button>
+
+      {/* Content */}
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
+          <span style={{
+            fontSize: 14, fontWeight: 500,
+            color: done ? 'var(--muted)' : 'var(--text)',
+            textDecoration: done ? 'line-through' : 'none',
+            overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+            fontFamily: 'var(--font-body)',
+          }}>{task.title}</span>
+
           {task.recurrence !== 'none' && (
-            <span className="text-xs" style={{ color: '#554466' }}>↻ {task.recurrence}</span>
+            <span style={{ fontSize: 12, color: 'rgba(180,85,255,0.5)', flexShrink: 0 }}>
+              {RECUR_ICON[task.recurrence]}
+            </span>
           )}
         </div>
-      </div>
-      <div className="flex gap-1">
-        {!isCompleted && (
-          <button
-            onClick={() => onStatusChange(task.id, 'skipped')}
-            className="text-xs px-2 py-1 rounded opacity-40 hover:opacity-70 cursor-pointer"
-            style={{ color: '#776688' }}
-          >
-            skip
-          </button>
+        {task.description && (
+          <p style={{ fontSize: 11, color: 'var(--muted2)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            {task.description}
+          </p>
         )}
-        <button
-          onClick={() => onDelete(task.id)}
-          className="text-xs px-2 py-1 rounded opacity-40 hover:opacity-70 cursor-pointer"
-          style={{ color: '#ff4466' }}
-        >
-          ✕
-        </button>
       </div>
+
+      {/* Priority badge */}
+      <span style={{
+        padding: '2px 8px', borderRadius: 99, flexShrink: 0,
+        background: p.bg, color: p.color,
+        fontFamily: 'var(--font-mono)', fontSize: 10,
+        letterSpacing: '0.05em', textTransform: 'uppercase',
+        border: `1px solid ${p.color}33`,
+      }}>{p.label}</span>
+
+      {/* Skip */}
+      {!done && (
+        <button onClick={() => onStatusChange(task.id, 'skipped')} style={{
+          background: 'transparent', border: 'none', cursor: 'pointer',
+          color: 'var(--muted2)', padding: '4px', borderRadius: 4,
+          transition: 'color 0.15s', lineHeight: 1, display: 'flex', alignItems: 'center',
+        }}
+          title="Skip"
+          onMouseEnter={e => e.currentTarget.style.color = '#ffaa00'}
+          onMouseLeave={e => e.currentTarget.style.color = 'var(--muted2)'}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/>
+          </svg>
+        </button>
+      )}
+
+      {/* Delete */}
+      <button onClick={() => onDelete(task.id)} style={{
+        background: 'transparent', border: 'none', cursor: 'pointer',
+        color: 'var(--muted2)', padding: '4px', borderRadius: 4,
+        transition: 'color 0.15s', display: 'flex', alignItems: 'center',
+      }}
+        onMouseEnter={e => e.currentTarget.style.color = 'var(--red)'}
+        onMouseLeave={e => e.currentTarget.style.color = 'var(--muted2)'}
+      >
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/>
+        </svg>
+      </button>
     </div>
   )
 }

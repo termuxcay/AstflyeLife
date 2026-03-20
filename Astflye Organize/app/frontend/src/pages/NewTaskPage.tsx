@@ -5,13 +5,12 @@ import { useCreateTask } from '@/hooks/useTasks'
 export default function NewTaskPage() {
   const navigate = useNavigate()
   const createTask = useCreateTask()
+
   type Priority = 'low' | 'medium' | 'high' | 'urgent'
   type Recurrence = 'none' | 'daily' | 'weekly' | 'monthly' | 'yearly'
   const [form, setForm] = useState<{
     title: string; description: string; priority: Priority; recurrence: Recurrence; category: string;
-  }>({
-    title: '', description: '', priority: 'medium', recurrence: 'none', category: '',
-  })
+  }>({ title: '', description: '', priority: 'medium', recurrence: 'none', category: '' })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -19,50 +18,81 @@ export default function NewTaskPage() {
     navigate('/tasks')
   }
 
-  const inputStyle: React.CSSProperties = {
-    background: '#1a0d2e', border: '1px solid #b455ff33',
-    borderRadius: 8, padding: '8px 12px', color: '#e0d0ff', width: '100%', outline: 'none',
-  }
+  const Label = ({ children }: { children: string }) => (
+    <label style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.12em', color: 'var(--muted)', textTransform: 'uppercase', display: 'block', marginBottom: 6 }}>
+      {children}
+    </label>
+  )
+
+  const PRIORITIES: Priority[] = ['low', 'medium', 'high', 'urgent']
+  const PRIO_COLOR: Record<Priority, string> = { low: '#00e87a', medium: '#b455ff', high: '#ffaa00', urgent: '#ff3366' }
 
   return (
-    <div className="max-w-lg mx-auto">
-      <h1 className="text-2xl font-bold mb-6" style={{ color: '#b455ff' }}>New Task</h1>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <div style={{ maxWidth: 520, margin: '0 auto' }}>
+      <div className="anim-fade-up" style={{ marginBottom: 28 }}>
+        <p style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.12em', color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 4 }}>tasks / new</p>
+        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 700, color: 'var(--text)' }}>New Task</h1>
+      </div>
+
+      <form onSubmit={handleSubmit} className="anim-fade-up delay-1" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
         <div>
-          <label className="text-xs mb-1 block" style={{ color: '#776688' }}>TITLE *</label>
-          <input style={inputStyle} value={form.title}
-            onChange={e => setForm({ ...form, title: e.target.value })} required />
+          <Label>Title *</Label>
+          <input className="input-neon" value={form.title}
+            onChange={e => setForm({ ...form, title: e.target.value })} required
+            placeholder="What needs to be done?" />
         </div>
+
         <div>
-          <label className="text-xs mb-1 block" style={{ color: '#776688' }}>DESCRIPTION</label>
-          <textarea style={{ ...inputStyle, minHeight: 80 }} value={form.description}
-            onChange={e => setForm({ ...form, description: e.target.value })} />
+          <Label>Description</Label>
+          <textarea className="input-neon" value={form.description}
+            onChange={e => setForm({ ...form, description: e.target.value })}
+            placeholder="Optional details..."
+            style={{ minHeight: 80, resize: 'vertical' }} />
         </div>
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="text-xs mb-1 block" style={{ color: '#776688' }}>PRIORITY</label>
-            <select style={inputStyle} value={form.priority}
-              onChange={e => setForm({ ...form, priority: e.target.value as Priority })}>
-              {['low', 'medium', 'high', 'urgent'].map(p => <option key={p} value={p}>{p}</option>)}
-            </select>
+
+        {/* Priority selector */}
+        <div>
+          <Label>Priority</Label>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 6 }}>
+            {PRIORITIES.map(p => {
+              const active = form.priority === p
+              const c = PRIO_COLOR[p]
+              return (
+                <button key={p} type="button" onClick={() => setForm({ ...form, priority: p })} style={{
+                  padding: '7px', borderRadius: 8, cursor: 'pointer',
+                  fontFamily: 'var(--font-mono)', fontSize: 11, textTransform: 'uppercase', letterSpacing: '0.04em',
+                  background: active ? `${c}20` : 'rgba(13,8,24,0.6)',
+                  border: `1px solid ${active ? `${c}55` : 'rgba(180,85,255,0.1)'}`,
+                  color: active ? c : 'var(--muted)',
+                  transition: 'all 0.15s',
+                  boxShadow: active ? `0 0 12px ${c}33` : 'none',
+                }}>{p}</button>
+              )
+            })}
           </div>
+        </div>
+
+        {/* Recurrence + Category */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
           <div>
-            <label className="text-xs mb-1 block" style={{ color: '#776688' }}>RECURRENCE</label>
-            <select style={inputStyle} value={form.recurrence}
+            <Label>Recurrence</Label>
+            <select className="input-neon" value={form.recurrence}
               onChange={e => setForm({ ...form, recurrence: e.target.value as Recurrence })}>
               {['none', 'daily', 'weekly', 'monthly', 'yearly'].map(r => <option key={r} value={r}>{r}</option>)}
             </select>
           </div>
+          <div>
+            <Label>Category</Label>
+            <input className="input-neon" value={form.category}
+              onChange={e => setForm({ ...form, category: e.target.value })}
+              placeholder="health, work…" />
+          </div>
         </div>
-        <div>
-          <label className="text-xs mb-1 block" style={{ color: '#776688' }}>CATEGORY</label>
-          <input style={inputStyle} value={form.category}
-            onChange={e => setForm({ ...form, category: e.target.value })}
-            placeholder="e.g. health, work, personal" />
-        </div>
-        <button type="submit" disabled={createTask.isPending}
-          className="py-3 rounded-lg font-semibold text-white mt-2 cursor-pointer"
-          style={{ background: 'linear-gradient(135deg, #b455ff, #ff55aa)' }}>
+
+        <button type="submit" disabled={createTask.isPending} className="btn-neon" style={{
+          width: '100%', padding: '12px', fontSize: 14, marginTop: 4,
+          opacity: createTask.isPending ? 0.7 : 1,
+        }}>
           {createTask.isPending ? 'Creating...' : 'Create Task'}
         </button>
       </form>
