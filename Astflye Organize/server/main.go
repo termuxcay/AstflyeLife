@@ -62,6 +62,21 @@ func main() {
 	api.Get("/users/me", userHandler.Me)
 	api.Get("/users/:id", userHandler.GetByID)
 
+	taskHandler := handlers.NewTaskHandler(database)
+	api.Get("/tasks", taskHandler.List)
+	api.Post("/tasks", taskHandler.Create)
+	api.Put("/tasks/:id", taskHandler.Update)
+	api.Delete("/tasks/:id", taskHandler.Delete)
+	api.Patch("/tasks/:id/status", taskHandler.UpdateStatus)
+
+	financeHandler := handlers.NewFinanceHandler(database)
+	api.Get("/finance/transactions", financeHandler.ListTransactions)
+	api.Post("/finance/transactions", financeHandler.CreateTransaction)
+	api.Put("/finance/transactions/:id", financeHandler.UpdateTransaction)
+	api.Delete("/finance/transactions/:id", financeHandler.DeleteTransaction)
+	api.Get("/finance/summary", financeHandler.Summary)
+	api.Get("/finance/categories", financeHandler.Categories)
+
 	app.Get("/health", func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"status": "ok"})
 	})
