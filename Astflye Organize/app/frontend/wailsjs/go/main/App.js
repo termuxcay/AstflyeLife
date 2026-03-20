@@ -42,6 +42,10 @@ export function GetGlobalName() {
   return window['go']['main']['App']['GetGlobalName']();
 }
 
+export function GetMemberSince() {
+  return window['go']['main']['App']['GetMemberSince']();
+}
+
 export function GetTasks() {
   return window['go']['main']['App']['GetTasks']();
 }

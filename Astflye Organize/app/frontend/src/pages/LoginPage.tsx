@@ -13,6 +13,7 @@ declare global {
           GetGlobalName: () => Promise<string>
           GetAvatar: () => Promise<string>
           GetDiscordID: () => Promise<string>
+          GetMemberSince: () => Promise<string>
           Logout: () => Promise<void>
         }
       }
@@ -71,13 +72,14 @@ export default function LoginPage() {
 
   useEffect(() => {
     window.runtime?.EventsOn('auth:success', async () => {
-      const token      = await window.go?.main.App.GetAccessToken() ?? ''
-      const username   = await window.go?.main.App.GetUsername()    ?? ''
-      const globalName = await window.go?.main.App.GetGlobalName()  ?? ''
-      const avatar     = await window.go?.main.App.GetAvatar()      ?? ''
-      const discordId  = await window.go?.main.App.GetDiscordID()   ?? ''
+      const token       = await window.go?.main.App.GetAccessToken()  ?? ''
+      const username    = await window.go?.main.App.GetUsername()     ?? ''
+      const globalName  = await window.go?.main.App.GetGlobalName()   ?? ''
+      const avatar      = await window.go?.main.App.GetAvatar()       ?? ''
+      const discordId   = await window.go?.main.App.GetDiscordID()    ?? ''
+      const memberSince = await window.go?.main.App.GetMemberSince()  ?? ''
       if (token) {
-        setTokens(token, { username, globalName, avatar, discordId })
+        setTokens(token, { username, globalName, avatar, discordId, memberSince })
         navigate('/')
       }
     })

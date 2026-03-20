@@ -88,7 +88,9 @@ export default function ProfilePage() {
 
   const displayName = me?.global_name || me?.username || '...'
   const handle      = me?.username ? `@${me.username}` : '...'
-  const memberSince = '—'
+  const memberSince = me?.member_since
+    ? new Date(me.member_since).toLocaleDateString('pt-BR', { year: 'numeric', month: 'long', day: 'numeric' })
+    : '—'
 
   return (
     <div style={{ maxWidth: 640, margin: '0 auto' }}>

@@ -5,6 +5,7 @@ export interface User {
   username: string
   global_name: string
   avatar: string
+  member_since: string
 }
 
 export function useMe(): User | null {
@@ -15,5 +16,6 @@ export function useMe(): User | null {
     username: user.username,
     global_name: user.globalName,
     avatar: user.avatar,
+    member_since: user.memberSince,
   }
 }

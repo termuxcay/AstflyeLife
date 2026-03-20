@@ -5,6 +5,7 @@ export interface StoredUser {
   globalName: string
   avatar: string
   discordId: string
+  memberSince: string
 }
 
 interface AuthState {

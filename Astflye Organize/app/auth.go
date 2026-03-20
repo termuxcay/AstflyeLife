@@ -191,12 +191,32 @@ func newOAuth2Config(cfg *Config) *oauth2.Config {
 		ClientID:     cfg.DiscordClientID,
 		ClientSecret: cfg.DiscordClientSecret,
 		RedirectURL:  cfg.DiscordRedirectURI,
-		Scopes:       []string{"identify", "guilds"},
+		Scopes:       []string{"identify", "guilds", "guilds.members.read"},
 		Endpoint: oauth2.Endpoint{
 			AuthURL:  "https://discord.com/api/oauth2/authorize",
 			TokenURL: "https://discord.com/api/oauth2/token",
 		},
 	}
+}
+
+// fetchGuildMemberJoinDate returns the ISO8601 joined_at timestamp for the user
+// in the given guild. Returns empty string on any error (scope not granted, etc.).
+func fetchGuildMemberJoinDate(ctx context.Context, token *oauth2.Token, cfg *oauth2.Config, guildID string) string {
+	client := cfg.Client(ctx, token)
+	resp, err := client.Get(fmt.Sprintf("https://discord.com/api/users/@me/guilds/%s/member", guildID))
+	if err != nil {
+		return ""
+	}
+	defer resp.Body.Close()
+	body, _ := io.ReadAll(resp.Body)
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		return ""
+	}
+	var m struct {
+		JoinedAt string `json:"joined_at"`
+	}
+	json.Unmarshal(body, &m)
+	return m.JoinedAt
 }
 
 // ─── Embedded OAuth HTTP server (port 3005) ────────────────────────────────────
@@ -254,6 +274,7 @@ func (a *App) handleOAuthCallback(w http.ResponseWriter, r *http.Request) {
 	}
 
 	avatarURL := discordAvatarURL(user.ID, user.Avatar, user.Discriminator)
+	joinedAt := fetchGuildMemberJoinDate(r.Context(), token, a.oauthCfg, a.cfg.DiscordGuildID)
 
 	q := url.Values{
 		"token":       {jwtToken},
@@ -261,6 +282,7 @@ func (a *App) handleOAuthCallback(w http.ResponseWriter, r *http.Request) {
 		"global_name": {user.GlobalName},
 		"avatar":      {avatarURL},
 		"discord_id":  {user.ID},
+		"joined_at":   {joinedAt},
 	}
 	http.Redirect(w, r, doneURL+"?"+q.Encode(), http.StatusFound)
 }
