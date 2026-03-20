@@ -1,4 +1,5 @@
 import type { Task } from '@/hooks/useTasks'
+import { playSound } from '@/lib/sounds'
 
 const PRIORITY_STYLE: Record<string, { bg: string; color: string; label: string }> = {
   low:    { bg: 'rgba(0,232,122,0.1)',   color: '#00e87a', label: 'low' },
@@ -19,10 +20,21 @@ export function TaskCard({ task, onStatusChange, onDelete }: {
   const done = task.status === 'completed'
   const p = PRIORITY_STYLE[task.priority] ?? PRIORITY_STYLE.medium
 
+  const dueBadge = (() => {
+    if (!task.due_date) return null
+    const d = new Date(task.due_date + 'T' + (task.due_time || '23:59'))
+    const now = new Date()
+    const diff = d.getTime() - now.getTime()
+    const overdue = diff < 0 && !done
+    const soon = diff >= 0 && diff < 3600_000 * 24 && !done
+    const label = task.due_date + (task.due_time ? ' ' + task.due_time : '')
+    return { label, overdue, soon }
+  })()
+
   return (
     <div style={{
-      display: 'flex', alignItems: 'center', gap: 12,
-      padding: '12px 14px', borderRadius: 10,
+      display: 'flex', alignItems: 'center', gap: 10,
+      padding: '11px 13px', borderRadius: 10,
       background: done ? 'rgba(10,6,18,0.4)' : 'var(--surface)',
       border: `1px solid ${done ? 'rgba(180,85,255,0.06)' : 'rgba(180,85,255,0.12)'}`,
       transition: 'all 0.2s ease',
@@ -32,10 +44,23 @@ export function TaskCard({ task, onStatusChange, onDelete }: {
       onMouseEnter={e => { e.currentTarget.style.borderColor = done ? 'rgba(180,85,255,0.1)' : 'rgba(180,85,255,0.3)' }}
       onMouseLeave={e => { e.currentTarget.style.borderColor = done ? 'rgba(180,85,255,0.06)' : 'rgba(180,85,255,0.12)' }}
     >
+      {/* Drag handle */}
+      <div style={{ color: 'var(--muted2)', cursor: 'grab', flexShrink: 0, lineHeight: 1 }} title="Drag">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+          <circle cx="9" cy="7" r="1.5"/><circle cx="15" cy="7" r="1.5"/>
+          <circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/>
+          <circle cx="9" cy="17" r="1.5"/><circle cx="15" cy="17" r="1.5"/>
+        </svg>
+      </div>
+
       {/* Complete toggle */}
       <button
         aria-label="complete"
-        onClick={() => onStatusChange(task.id, done ? 'pending' : 'completed')}
+        onClick={() => {
+          const next = done ? 'pending' : 'completed'
+          if (next === 'completed') playSound('taskDone')
+          onStatusChange(task.id, next)
+        }}
         style={{
           width: 22, height: 22, borderRadius: '50%', flexShrink: 0,
           border: `1.5px solid ${done ? 'var(--green)' : 'rgba(180,85,255,0.4)'}`,
@@ -55,7 +80,7 @@ export function TaskCard({ task, onStatusChange, onDelete }: {
 
       {/* Content */}
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2, flexWrap: 'wrap' }}>
           <span style={{
             fontSize: 14, fontWeight: 500,
             color: done ? 'var(--muted)' : 'var(--text)',
@@ -70,11 +95,24 @@ export function TaskCard({ task, onStatusChange, onDelete }: {
             </span>
           )}
         </div>
-        {task.description && (
-          <p style={{ fontSize: 11, color: 'var(--muted2)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-            {task.description}
-          </p>
-        )}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          {task.description && (
+            <p style={{ fontSize: 11, color: 'var(--muted2)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {task.description}
+            </p>
+          )}
+          {dueBadge && (
+            <span style={{
+              fontSize: 10, fontFamily: 'var(--font-mono)', flexShrink: 0,
+              padding: '1px 6px', borderRadius: 99,
+              background: dueBadge.overdue ? 'rgba(255,51,102,0.15)' : dueBadge.soon ? 'rgba(255,170,0,0.12)' : 'rgba(180,85,255,0.1)',
+              color: dueBadge.overdue ? '#ff3366' : dueBadge.soon ? '#ffaa00' : 'var(--muted)',
+              border: `1px solid ${dueBadge.overdue ? 'rgba(255,51,102,0.3)' : dueBadge.soon ? 'rgba(255,170,0,0.3)' : 'rgba(180,85,255,0.15)'}`,
+            }}>
+              {dueBadge.overdue ? '! ' : ''}{dueBadge.label}
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Priority badge */}
@@ -104,7 +142,7 @@ export function TaskCard({ task, onStatusChange, onDelete }: {
       )}
 
       {/* Delete */}
-      <button onClick={() => onDelete(task.id)} style={{
+      <button onClick={() => { playSound('taskDelete'); onDelete(task.id) }} style={{
         background: 'transparent', border: 'none', cursor: 'pointer',
         color: 'var(--muted2)', padding: '4px', borderRadius: 4,
         transition: 'color 0.15s', display: 'flex', alignItems: 'center',

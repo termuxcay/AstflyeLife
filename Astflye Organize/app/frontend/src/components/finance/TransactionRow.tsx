@@ -1,5 +1,9 @@
 import type { Transaction } from '@/hooks/useFinance'
 
+const PERIOD_LABEL: Record<string, string> = {
+  daily: 'diário', weekly: 'semanal', monthly: 'mensal', yearly: 'anual',
+}
+
 interface Props { tx: Transaction; onDelete: (id: string) => void }
 
 export function TransactionRow({ tx, onDelete }: Props) {
@@ -10,6 +14,7 @@ export function TransactionRow({ tx, onDelete }: Props) {
       padding: '10px 14px', borderRadius: 8,
       background: 'var(--surface)', border: '1px solid rgba(180,85,255,0.08)',
       transition: 'all 0.2s ease', backdropFilter: 'blur(8px)',
+      animation: 'fadeUp 0.3s ease both',
     }}
       onMouseEnter={e => { e.currentTarget.style.borderColor = 'rgba(180,85,255,0.2)' }}
       onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(180,85,255,0.08)' }}
@@ -32,15 +37,27 @@ export function TransactionRow({ tx, onDelete }: Props) {
         <p style={{ fontSize: 13, color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
           {tx.description || tx.category}
         </p>
-        <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginTop: 2 }}>
+        <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginTop: 2, flexWrap: 'wrap' }}>
           <span style={{
             fontSize: 10, padding: '1px 6px', borderRadius: 99,
             background: 'rgba(180,85,255,0.08)', color: 'var(--muted)',
             fontFamily: 'var(--font-mono)', letterSpacing: '0.04em',
           }}>{tx.category}</span>
           <span style={{ fontSize: 10, color: 'var(--muted2)', fontFamily: 'var(--font-mono)' }}>
-            {new Date(tx.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}
+            {tx.date || new Date(tx.created_at).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' })}
           </span>
+          {tx.recurring && (
+            <span style={{
+              fontSize: 10, padding: '1px 7px', borderRadius: 99,
+              background: 'rgba(255,170,0,0.1)', color: '#ffaa00',
+              border: '1px solid rgba(255,170,0,0.25)',
+              fontFamily: 'var(--font-mono)', letterSpacing: '0.04em',
+              display: 'flex', alignItems: 'center', gap: 3,
+            }}>
+              <span style={{ fontSize: 11 }}>↻</span>
+              {tx.recurring_period ? PERIOD_LABEL[tx.recurring_period] ?? tx.recurring_period : 'recorrente'}
+            </span>
+          )}
         </div>
       </div>
 

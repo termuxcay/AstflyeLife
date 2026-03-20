@@ -26,6 +26,8 @@ export function GetMemberSince():Promise<string>;
 
 export function GetTasks():Promise<Array<main.Task>>;
 
+export function GetTasksDue(arg1:number):Promise<Array<main.Task>>;
+
 export function GetTransactions():Promise<Array<main.Transaction>>;
 
 export function GetUsername():Promise<string>;

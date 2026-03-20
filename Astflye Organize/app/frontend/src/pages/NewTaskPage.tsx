@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCreateTask } from '@/hooks/useTasks'
+import { playSound } from '@/lib/sounds'
 
 export default function NewTaskPage() {
   const navigate = useNavigate()
@@ -9,12 +10,17 @@ export default function NewTaskPage() {
   type Priority = 'low' | 'medium' | 'high' | 'urgent'
   type Recurrence = 'none' | 'daily' | 'weekly' | 'monthly' | 'yearly'
   const [form, setForm] = useState<{
-    title: string; description: string; status: string; priority: Priority; recurrence: Recurrence; category: string; due_date: string;
-  }>({ title: '', description: '', status: 'pending', priority: 'medium', recurrence: 'none', category: '', due_date: '' })
+    title: string; description: string; status: string; priority: Priority
+    recurrence: Recurrence; category: string; due_date: string; due_time: string; notify_before: number
+  }>({
+    title: '', description: '', status: 'pending', priority: 'medium',
+    recurrence: 'none', category: '', due_date: '', due_time: '', notify_before: 5,
+  })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     await createTask.mutateAsync(form)
+    playSound('taskCreate')
     navigate('/tasks')
   }
 
@@ -70,6 +76,30 @@ export default function NewTaskPage() {
               )
             })}
           </div>
+        </div>
+
+        {/* Due date + time */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14 }}>
+          <div>
+            <Label>Due Date</Label>
+            <input type="date" className="input-neon" value={form.due_date}
+              onChange={e => setForm({ ...form, due_date: e.target.value })}
+              style={{ colorScheme: 'dark' }} />
+          </div>
+          <div>
+            <Label>Due Time</Label>
+            <input type="time" className="input-neon" value={form.due_time}
+              onChange={e => setForm({ ...form, due_time: e.target.value })}
+              style={{ colorScheme: 'dark' }} />
+          </div>
+        </div>
+
+        {/* Notify before */}
+        <div>
+          <Label>Notify Before (minutes)</Label>
+          <input type="number" className="input-neon" value={form.notify_before} min={1} max={1440}
+            onChange={e => setForm({ ...form, notify_before: Number(e.target.value) })}
+            placeholder="5" />
         </div>
 
         {/* Recurrence + Category */}

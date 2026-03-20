@@ -123,7 +123,7 @@ func TestFinanceSummary(t *testing.T) {
 	createTransaction(dir, testDiscordID, TransactionInput{Type: "income", Amount: 1000.0, Currency: "BRL", Category: "salary", Date: "2026-03-01"})
 	createTransaction(dir, testDiscordID, TransactionInput{Type: "expense", Amount: 200.0, Currency: "BRL", Category: "food", Date: "2026-03-15"})
 
-	sum, err := getFinanceSummary(dir, testDiscordID)
+	sum, err := getFinanceSummary(dir, testDiscordID, "all")
 	if err != nil {
 		t.Fatalf("getFinanceSummary error: %v", err)
 	}

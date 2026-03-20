@@ -50,6 +50,10 @@ export function GetTasks() {
   return window['go']['main']['App']['GetTasks']();
 }
 
+export function GetTasksDue(arg1) {
+  return window['go']['main']['App']['GetTasksDue'](arg1);
+}
+
 export function GetTransactions() {
   return window['go']['main']['App']['GetTransactions']();
 }

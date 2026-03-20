@@ -1,10 +1,16 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCreateTransaction } from '@/hooks/useFinance'
+import { playSound } from '@/lib/sounds'
 
 const CATEGORIES = {
   income:  ['salary', 'freelance', 'investment', 'gift', 'other'],
   expense: ['food', 'transport', 'health', 'entertainment', 'bills', 'education', 'other'],
+}
+
+const RECURRING_PERIODS = ['none', 'daily', 'weekly', 'monthly', 'yearly']
+const PERIOD_LABEL: Record<string, string> = {
+  none: 'Não recorrente', daily: 'Diário', weekly: 'Semanal', monthly: 'Mensal', yearly: 'Anual',
 }
 
 export default function NewTransactionPage() {
@@ -12,12 +18,22 @@ export default function NewTransactionPage() {
   const createTx = useCreateTransaction()
   const [form, setForm] = useState<{
     type: 'income' | 'expense'; amount: string; category: string;
-    description: string; recurring: boolean; currency: string; date: string;
-  }>({ type: 'expense', amount: '', category: 'food', description: '', recurring: false, currency: 'BRL', date: new Date().toISOString().slice(0, 10) })
+    description: string; recurring: boolean; recurring_period: string; currency: string; date: string;
+  }>({
+    type: 'expense', amount: '', category: 'food', description: '',
+    recurring: false, recurring_period: 'none', currency: 'BRL',
+    date: new Date().toISOString().slice(0, 10),
+  })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    await createTx.mutateAsync({ ...form, amount: parseFloat(form.amount) })
+    await createTx.mutateAsync({
+      ...form,
+      amount: parseFloat(form.amount),
+      recurring: form.recurring_period !== 'none',
+      recurring_period: form.recurring_period === 'none' ? '' : form.recurring_period,
+    })
+    playSound('expenseAdd')
     navigate('/finance')
   }
 
@@ -57,14 +73,14 @@ export default function NewTransactionPage() {
                     : <><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></>
                   }
                 </svg>
-                {t === 'income' ? 'Income' : 'Expense'}
+                {t === 'income' ? 'Receita' : 'Despesa'}
               </button>
             )
           })}
         </div>
 
         <div>
-          <Label>Amount (R$) *</Label>
+          <Label>Valor (R$) *</Label>
           <input className="input-neon" type="number" step="0.01" min="0.01"
             value={form.amount}
             onChange={e => setForm({ ...form, amount: e.target.value })} required
@@ -73,7 +89,7 @@ export default function NewTransactionPage() {
         </div>
 
         <div>
-          <Label>Category</Label>
+          <Label>Categoria</Label>
           <select className="input-neon" value={form.category}
             onChange={e => setForm({ ...form, category: e.target.value })}>
             {CATEGORIES[form.type].map(c => <option key={c} value={c}>{c}</option>)}
@@ -81,17 +97,33 @@ export default function NewTransactionPage() {
         </div>
 
         <div>
-          <Label>Description</Label>
+          <Label>Descrição</Label>
           <input className="input-neon" value={form.description}
             onChange={e => setForm({ ...form, description: e.target.value })}
-            placeholder="Optional note..." />
+            placeholder="Nota opcional..." />
+        </div>
+
+        <div>
+          <Label>Data</Label>
+          <input type="date" className="input-neon" value={form.date}
+            onChange={e => setForm({ ...form, date: e.target.value })}
+            style={{ colorScheme: 'dark' }} />
+        </div>
+
+        {/* Recurring period */}
+        <div>
+          <Label>Recorrência</Label>
+          <select className="input-neon" value={form.recurring_period}
+            onChange={e => setForm({ ...form, recurring_period: e.target.value })}>
+            {RECURRING_PERIODS.map(p => <option key={p} value={p}>{PERIOD_LABEL[p]}</option>)}
+          </select>
         </div>
 
         <button type="submit" disabled={createTx.isPending} className="btn-neon" style={{
           width: '100%', padding: '12px', fontSize: 14, marginTop: 4,
           opacity: createTx.isPending ? 0.7 : 1,
         }}>
-          {createTx.isPending ? 'Adding...' : 'Add Transaction'}
+          {createTx.isPending ? 'Adicionando...' : 'Adicionar'}
         </button>
       </form>
     </div>

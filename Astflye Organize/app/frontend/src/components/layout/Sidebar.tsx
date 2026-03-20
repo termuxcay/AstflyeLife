@@ -47,11 +47,11 @@ export function Sidebar() {
 
   return (
     <aside style={{
-      width: collapsed ? 68 : 220,
-      background: 'rgba(10, 6, 18, 0.95)',
+      width: collapsed ? 72 : 230,
+      background: 'rgba(10, 6, 18, 0.97)',
       borderRight: '1px solid rgba(180,85,255,0.1)',
       display: 'flex', flexDirection: 'column',
-      padding: '20px 10px',
+      padding: '24px 12px',
       flexShrink: 0,
       transition: 'width 0.25s cubic-bezier(0.4,0,0.2,1)',
       position: 'relative', zIndex: 10,
@@ -96,7 +96,7 @@ export function Sidebar() {
           return (
             <Link key={href} to={href} style={{
               display: 'flex', alignItems: 'center', gap: 10,
-              padding: collapsed ? '10px' : '9px 12px',
+              padding: collapsed ? '12px' : '11px 14px',
               borderRadius: 8,
               textDecoration: 'none',
               justifyContent: collapsed ? 'center' : 'flex-start',

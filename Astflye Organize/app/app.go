@@ -42,8 +42,29 @@ func NewApp(cfg *Config) *App {
 
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
+	runtime.WindowMaximise(ctx)
 	if err := a.startOAuthServer(); err != nil {
 		fmt.Printf("failed to start OAuth server: %v\n", err)
+	}
+	go a.startNotificationLoop()
+}
+
+func (a *App) startNotificationLoop() {
+	ticker := time.NewTicker(60 * time.Second)
+	defer ticker.Stop()
+	for {
+		select {
+		case <-ticker.C:
+			if a.currentDiscordID() == "" {
+				continue
+			}
+			tasks, _ := a.GetTasksDue(5)
+			for _, t := range tasks {
+				runtime.EventsEmit(a.ctx, "task:due-soon", t)
+			}
+		case <-a.ctx.Done():
+			return
+		}
 	}
 }
 
@@ -188,7 +209,7 @@ func errorPage(errCode string) string {
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#08050f;min-height:100vh;display:flex;align-items:center;justify-content:center;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;overflow:hidden;position:relative}
-.orb{position:fixed;border-radius:50%;filter:blur(90px);pointer-events:none}
+.orb{position:fixed;border-radius:50%%;filter:blur(90px);pointer-events:none}
 .o1{width:340px;height:340px;background:rgba(255,51,102,0.1);top:-80px;left:-80px;animation:p1 6s ease-in-out infinite}
 .o2{width:260px;height:260px;background:rgba(255,100,80,0.07);bottom:-60px;right:-60px;animation:p1 8s ease-in-out infinite reverse}
 @keyframes p1{0%%,100%%{transform:scale(1);opacity:.7}50%%{transform:scale(1.1);opacity:1}}
@@ -285,6 +306,39 @@ func (a *App) DeleteTask(id string) error {
 	return deleteTask(dir, a.currentDiscordID(), id)
 }
 
+func (a *App) GetTasksDue(minutes int) ([]Task, error) {
+	dir, err := a.appDataDir()
+	if err != nil {
+		return nil, err
+	}
+	tasks, err := getTasks(dir, a.currentDiscordID())
+	if err != nil {
+		return nil, err
+	}
+	now := time.Now()
+	threshold := now.Add(time.Duration(minutes) * time.Minute)
+	due := []Task{}
+	for _, t := range tasks {
+		if t.Status == "completed" || t.Status == "skipped" || t.DueDate == "" {
+			continue
+		}
+		dueDateStr := t.DueDate
+		if t.DueTime != "" {
+			dueDateStr += "T" + t.DueTime + ":00"
+		} else {
+			dueDateStr += "T23:59:00"
+		}
+		dueTime, err := time.ParseInLocation("2006-01-02T15:04:05", dueDateStr, now.Location())
+		if err != nil {
+			continue
+		}
+		if dueTime.After(now) && dueTime.Before(threshold) {
+			due = append(due, t)
+		}
+	}
+	return due, nil
+}
+
 // ─── Finance bridge methods ───────────────────────────────────────────────────
 
 func (a *App) GetTransactions() ([]Transaction, error) {
@@ -324,7 +378,7 @@ func (a *App) GetFinanceSummary(period string) (FinanceSummary, error) {
 	if err != nil {
 		return FinanceSummary{}, err
 	}
-	return getFinanceSummary(dir, a.currentDiscordID())
+	return getFinanceSummary(dir, a.currentDiscordID(), period)
 }
 
 func (a *App) GetCategories() ([]string, error) {

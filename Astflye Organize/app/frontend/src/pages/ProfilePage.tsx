@@ -1,7 +1,7 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useMe } from '@/hooks/useMe'
 import { useAuthStore } from '@/store/auth'
+import { useSettingsStore } from '@/store/settings'
 
 // ── reusable section card ────────────────────────────────────────────────────
 function Card({ title, children }: { title: string; children: React.ReactNode }) {
@@ -73,12 +73,7 @@ export default function ProfilePage() {
   const me = useMe()
   const clear = useAuthStore((s) => s.clear)
   const navigate = useNavigate()
-
-  // settings state (local only — extend to API if needed)
-  const [notifs, setNotifs]     = useState(true)
-  const [sounds, setSounds]     = useState(false)
-  const [compact, setCompact]   = useState(false)
-  const [streakAlert, setStreak] = useState(true)
+  const { soundEnabled, notifyBefore, setSoundEnabled, setNotifyBefore } = useSettingsStore()
 
   const handleLogout = async () => {
     await window.go?.main.App.Logout()
@@ -221,38 +216,40 @@ export default function ProfilePage() {
 
         </div>
 
-        {/* ── preferences ──────────────────────────────────────────────── */}
+        {/* ── som ──────────────────────────────────────────────────────── */}
         <div className="anim-fade-up delay-2">
-          <Card title="Preferências">
+          <Card title="Som">
             <ToggleRow
-              label="Notificações"
-              description="Alertas de tarefas e lembretes"
-              value={notifs}
-              onChange={setNotifs}
-            />
-            <ToggleRow
-              label="Sons"
-              description="Sons ao completar tarefas"
-              value={sounds}
-              onChange={setSounds}
-            />
-            <ToggleRow
-              label="Modo Compacto"
-              description="Menos espaçamento entre elementos"
-              value={compact}
-              onChange={setCompact}
-            />
-            <ToggleRow
-              label="Alerta de Streak"
-              description="Aviso diário para manter o streak"
-              value={streakAlert}
-              onChange={setStreak}
+              label="Sons do App"
+              description="Feedback sonoro ao criar tarefas, completar, adicionar despesas, etc."
+              value={soundEnabled}
+              onChange={setSoundEnabled}
             />
           </Card>
         </div>
 
-        {/* ── app info ─────────────────────────────────────────────────── */}
+        {/* ── notificações ─────────────────────────────────────────────── */}
         <div className="anim-fade-up delay-3">
+          <Card title="Notificações">
+            <div style={{ padding: '14px 0', borderBottom: '1px solid rgba(180,85,255,0.05)' }}>
+              <p style={{ fontSize: 14, color: 'var(--text)', marginBottom: 4 }}>Avisar antes do prazo</p>
+              <p style={{ fontSize: 12, color: 'var(--muted)', marginBottom: 12 }}>Receba alertas X minutos antes da tarefa vencer</p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <input
+                  type="number" min={1} max={1440}
+                  value={notifyBefore}
+                  onChange={e => setNotifyBefore(Number(e.target.value))}
+                  className="input-neon"
+                  style={{ width: 100, textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: 16 }}
+                />
+                <span style={{ fontSize: 13, color: 'var(--muted)', fontFamily: 'var(--font-mono)' }}>minutos</span>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        {/* ── app info ─────────────────────────────────────────────────── */}
+        <div className="anim-fade-up delay-4">
           <Card title="Sobre o App">
             {[
               { k: 'Versão',   v: '1.0.0' },
@@ -271,7 +268,7 @@ export default function ProfilePage() {
         </div>
 
         {/* ── danger zone ──────────────────────────────────────────────── */}
-        <div className="anim-fade-up delay-4" style={{
+        <div className="anim-fade-up delay-5" style={{
           background: 'rgba(255,51,102,0.04)',
           border: '1px solid rgba(255,51,102,0.12)',
           borderRadius: 16, padding: '24px',

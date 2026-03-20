@@ -22,41 +22,47 @@ type Task struct {
 	Category      string `json:"category"`
 	Recurrence    string `json:"recurrence"`
 	DueDate       string `json:"due_date"`
+	DueTime       string `json:"due_time"`
+	NotifyBefore  int    `json:"notify_before"`
 	CompletedAt   string `json:"completed_at"`
 	CreatedAt     string `json:"created_at"`
 }
 
 type TaskInput struct {
-	Title       string `json:"title"`
-	Description string `json:"description"`
-	Status      string `json:"status"`
-	Priority    string `json:"priority"`
-	Category    string `json:"category"`
-	Recurrence  string `json:"recurrence"`
-	DueDate     string `json:"due_date"`
+	Title        string `json:"title"`
+	Description  string `json:"description"`
+	Status       string `json:"status"`
+	Priority     string `json:"priority"`
+	Category     string `json:"category"`
+	Recurrence   string `json:"recurrence"`
+	DueDate      string `json:"due_date"`
+	DueTime      string `json:"due_time"`
+	NotifyBefore int    `json:"notify_before"`
 }
 
 type Transaction struct {
-	ID            string  `json:"id"`
-	UserDiscordID string  `json:"user_discord_id"`
-	Type          string  `json:"type"`
-	Amount        float64 `json:"amount"`
-	Currency      string  `json:"currency"`
-	Category      string  `json:"category"`
-	Description   string  `json:"description"`
-	Recurring     bool    `json:"recurring"`
-	Date          string  `json:"date"`
-	CreatedAt     string  `json:"created_at"`
+	ID              string  `json:"id"`
+	UserDiscordID   string  `json:"user_discord_id"`
+	Type            string  `json:"type"`
+	Amount          float64 `json:"amount"`
+	Currency        string  `json:"currency"`
+	Category        string  `json:"category"`
+	Description     string  `json:"description"`
+	Recurring       bool    `json:"recurring"`
+	RecurringPeriod string  `json:"recurring_period"`
+	Date            string  `json:"date"`
+	CreatedAt       string  `json:"created_at"`
 }
 
 type TransactionInput struct {
-	Type        string  `json:"type"`
-	Amount      float64 `json:"amount"`
-	Currency    string  `json:"currency"`
-	Category    string  `json:"category"`
-	Description string  `json:"description"`
-	Recurring   bool    `json:"recurring"`
-	Date        string  `json:"date"`
+	Type            string  `json:"type"`
+	Amount          float64 `json:"amount"`
+	Currency        string  `json:"currency"`
+	Category        string  `json:"category"`
+	Description     string  `json:"description"`
+	Recurring       bool    `json:"recurring"`
+	RecurringPeriod string  `json:"recurring_period"`
+	Date            string  `json:"date"`
 }
 
 type FinanceSummary struct {
@@ -144,6 +150,8 @@ func createTask(dir, discordID string, in TaskInput) (Task, error) {
 		Category:      in.Category,
 		Recurrence:    recurrence,
 		DueDate:       in.DueDate,
+		DueTime:       in.DueTime,
+		NotifyBefore:  in.NotifyBefore,
 		CreatedAt:     time.Now().UTC().Format(time.RFC3339),
 	}
 	all = append(all, t)
@@ -163,6 +171,8 @@ func updateTask(dir, discordID, id string, in TaskInput) error {
 			all[i].Category = in.Category
 			all[i].Recurrence = in.Recurrence
 			all[i].DueDate = in.DueDate
+			all[i].DueTime = in.DueTime
+			all[i].NotifyBefore = in.NotifyBefore
 			if in.Status != "" {
 				all[i].Status = in.Status
 			}
@@ -235,16 +245,17 @@ func createTransaction(dir, discordID string, in TransactionInput) (Transaction,
 		currency = "BRL"
 	}
 	tx := Transaction{
-		ID:            uuid.New().String(),
-		UserDiscordID: discordID,
-		Type:          in.Type,
-		Amount:        in.Amount,
-		Currency:      currency,
-		Category:      in.Category,
-		Description:   in.Description,
-		Recurring:     in.Recurring,
-		Date:          date,
-		CreatedAt:     time.Now().UTC().Format(time.RFC3339),
+		ID:              uuid.New().String(),
+		UserDiscordID:   discordID,
+		Type:            in.Type,
+		Amount:          in.Amount,
+		Currency:        currency,
+		Category:        in.Category,
+		Description:     in.Description,
+		Recurring:       in.Recurring,
+		RecurringPeriod: in.RecurringPeriod,
+		Date:            date,
+		CreatedAt:       time.Now().UTC().Format(time.RFC3339),
 	}
 	all = append(all, tx)
 	return tx, writeJSON(transactionsPath(dir), all)
@@ -263,6 +274,7 @@ func updateTransaction(dir, discordID, id string, in TransactionInput) error {
 			all[i].Category = in.Category
 			all[i].Description = in.Description
 			all[i].Recurring = in.Recurring
+			all[i].RecurringPeriod = in.RecurringPeriod
 			if in.Date != "" {
 				all[i].Date = in.Date
 			}
@@ -286,13 +298,18 @@ func deleteTransaction(dir, discordID, id string) error {
 	return writeJSON(transactionsPath(dir), filtered)
 }
 
-func getFinanceSummary(dir, discordID string) (FinanceSummary, error) {
+func getFinanceSummary(dir, discordID, period string) (FinanceSummary, error) {
 	txs, err := getTransactions(dir, discordID)
 	if err != nil {
 		return FinanceSummary{}, err
 	}
+	now := time.Now()
+	today := now.Format("2006-01-02")
 	var income, expenses float64
 	for _, tx := range txs {
+		if !txInPeriod(tx.Date, period, now, today) {
+			continue
+		}
 		switch tx.Type {
 		case "income":
 			income += tx.Amount
@@ -300,12 +317,31 @@ func getFinanceSummary(dir, discordID string) (FinanceSummary, error) {
 			expenses += tx.Amount
 		}
 	}
+	if period == "" {
+		period = "all"
+	}
 	return FinanceSummary{
 		Income:   income,
 		Expenses: expenses,
 		Balance:  income - expenses,
-		Period:   "all",
+		Period:   period,
 	}, nil
+}
+
+func txInPeriod(date, period string, now time.Time, today string) bool {
+	switch period {
+	case "daily":
+		return date == today
+	case "weekly":
+		cutoff := now.AddDate(0, 0, -7).Format("2006-01-02")
+		return date >= cutoff
+	case "monthly":
+		return len(date) >= 7 && date[:7] == today[:7]
+	case "yearly":
+		return len(date) >= 4 && date[:4] == today[:4]
+	default:
+		return true
+	}
 }
 
 func getCategories(dir, discordID string) ([]string, error) {
