@@ -105,6 +105,9 @@ astflye-life/
 | DiscordID | string | unique, used for friend lookup |
 | Username | string | Discord display name |
 | Avatar | string | Discord avatar URL |
+| CurrentStreak | int | consecutive active days |
+| LongestStreak | int | all-time best streak |
+| LastActiveDate | *time.Time | last day with a completed task |
 | CreatedAt | time.Time | |
 
 ### Task
@@ -156,6 +159,23 @@ astflye-life/
 | CreatedAt | time.Time | |
 | Members | via TeamMember | many-to-many join table |
 
+### TeamMember
+| Field | Type | Notes |
+|---|---|---|
+| TeamID | string | FK → Team.ID |
+| UserID | string | FK → User.ID |
+| Role | string | member \| admin |
+| JoinedAt | time.Time | |
+
+### RefreshToken
+| Field | Type | Notes |
+|---|---|---|
+| ID | string (UUID) | |
+| UserID | string | FK → User.ID |
+| TokenHash | string | bcrypt hash of the raw token |
+| ExpiresAt | time.Time | 30-day expiry |
+| CreatedAt | time.Time | |
+
 ### Message
 | Field | Type | Notes |
 |---|---|---|
@@ -173,18 +193,21 @@ astflye-life/
 
 ```
 1. User clicks "Login with Discord"
-2. App opens system browser → Discord OAuth2 authorize URL
-   scope: identify + guilds
-3. Discord redirects to server: GET /auth/callback?code=...
-4. Server exchanges code → Discord access token
-5. Server fetches user profile + guild memberships
-6. Server checks guild_id presence in memberships
+2. Server generates a short-lived random state value (stored in memory, 5 min TTL)
+3. App opens system browser → Discord OAuth2 authorize URL
+   scope: identify + guilds, params: state=<random>
+4. Discord redirects to server: GET /auth/callback?code=...&state=...
+5. Server validates state matches stored value (CSRF protection); rejects if mismatch
+6. Server exchanges code → Discord access token
+7. Server fetches user profile + guild memberships from Discord API
+8. Server checks guild_id presence in memberships
    → NOT MEMBER: return 403, prompt user to join server
    → MEMBER: upsert User record in SQLite
-7. Server issues JWT (24h) + refresh token (stored in DB)
-8. Tokens returned to desktop app, stored in memory only
-9. All API requests: Authorization: Bearer <token>
-10. Token refresh handled transparently by API client
+9. Server issues JWT (24h access token, signed with JWT_SECRET)
+   + refresh token (30d, hashed and stored in RefreshToken table)
+10. Both tokens returned to desktop app, stored in memory only (never on disk)
+11. All API requests: Authorization: Bearer <access_token>
+12. When access token expires: POST /auth/refresh with refresh token → new access token
 ```
 
 **Security constraints:**
@@ -199,7 +222,7 @@ astflye-life/
 
 ```
 # Auth
-POST   /auth/callback              Discord OAuth callback + guild check
+GET    /auth/callback              Discord OAuth callback + guild check (GET — browser redirect)
 POST   /auth/refresh               Refresh JWT
 
 # Users
@@ -216,6 +239,7 @@ PATCH  /tasks/:id/status           Change status
 # Finance
 GET    /finance/transactions       List (filter: type, category, date range)
 POST   /finance/transactions       Add transaction
+PUT    /finance/transactions/:id   Update transaction
 DELETE /finance/transactions/:id   Delete
 GET    /finance/summary            Totals by period (daily/weekly/monthly/yearly)
 GET    /finance/categories         Spending breakdown
@@ -230,7 +254,29 @@ POST   /social/teams/:id/members   Add member
 
 # Real-time
 WS     /ws                         Chat + notifications WebSocket
+
+# Admin (requires DISCORD_ADMIN_ROLE)
+GET    /admin/users                List all users
+DELETE /admin/users/:id            Ban user
 ```
+
+### WebSocket Message Envelope
+
+All WebSocket messages use a typed JSON envelope:
+
+```json
+{ "type": "<event_type>", "payload": { ... } }
+```
+
+| type | direction | payload |
+|---|---|---|
+| `message.send` | client → server | `{ to: string, chatType: "direct"\|"team", content: string }` |
+| `message.receive` | server → client | `{ from: string, chatType: string, content: string, createdAt: string }` |
+| `notification` | server → client | `{ title: string, body: string, kind: "task"\|"friend"\|"system" }` |
+| `presence.online` | server → client | `{ userId: string }` |
+| `presence.offline` | server → client | `{ userId: string }` |
+| `ping` | client → server | `{}` |
+| `pong` | server → client | `{}` |
 
 ---
 
@@ -288,13 +334,15 @@ WS     /ws                         Chat + notifications WebSocket
 ```bash
 # server/.env (never committed)
 
-# Discord
+# Discord OAuth2 (login + guild check)
 DISCORD_CLIENT_ID=
 DISCORD_CLIENT_SECRET=
-DISCORD_BOT_TOKEN=
 DISCORD_REDIRECT_URI=http://localhost:3005/auth/callback
-DISCORD_GUILD_ID=
-DISCORD_ADMIN_ROLE=
+DISCORD_GUILD_ID=           # users must be in this guild to access the app
+
+# Discord Bot (used by admin endpoints to verify admin role + send DM notifications)
+DISCORD_BOT_TOKEN=
+DISCORD_ADMIN_ROLE=         # Discord role ID that grants access to /admin/* routes
 
 # Server
 PORT=3005
