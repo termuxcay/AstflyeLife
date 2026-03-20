@@ -1,0 +1,80 @@
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\bin\Release\net7.0-windows\DirectML.dll
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\bin\Release\net7.0-windows\Spotify.exe
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\bin\Release\net7.0-windows\Spotify.dll.config
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\bin\Release\net7.0-windows\Spotify.deps.json
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\bin\Release\net7.0-windows\Spotify.runtimeconfig.json
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\bin\Release\net7.0-windows\Spotify.dll
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\bin\Release\net7.0-windows\runtimes\win-arm\native\onnxruntime.dll
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\bin\Release\net7.0-windows\runtimes\win-arm\native\onnxruntime.lib
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\bin\Release\net7.0-windows\runtimes\win-arm64\native\onnxruntime.dll
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\bin\Release\net7.0-windows\runtimes\win-arm64\native\onnxruntime.lib
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\bin\Release\net7.0-windows\runtimes\win-x64\native\onnxruntime.dll
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\bin\Release\net7.0-windows\runtimes\win-x64\native\onnxruntime.lib
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\bin\Release\net7.0-windows\runtimes\win-x86\native\onnxruntime.dll
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\bin\Release\net7.0-windows\runtimes\win-x86\native\onnxruntime.lib
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\obj\Release\net7.0-windows\Dark The Finals.csproj.AssemblyReference.cache
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\obj\Release\net7.0-windows\MainWindow.baml
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\obj\Release\net7.0-windows\UserController\AKeyChanger.baml
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\obj\Release\net7.0-windows\UserController\ALabel.baml
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\obj\Release\net7.0-windows\UserController\ASlider.baml
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\obj\Release\net7.0-windows\UserController\AToggle.baml
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\obj\Release\net7.0-windows\App.baml
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\obj\Release\net7.0-windows\MainWindow.g.cs
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\obj\Release\net7.0-windows\UserController\AKeyChanger.g.cs
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\obj\Release\net7.0-windows\UserController\ALabel.g.cs
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\obj\Release\net7.0-windows\UserController\ASlider.g.cs
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\obj\Release\net7.0-windows\UserController\AToggle.g.cs
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\obj\Release\net7.0-windows\App.g.cs
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\obj\Release\net7.0-windows\Spotify_MarkupCompile.cache
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\obj\Release\net7.0-windows\Spotify.g.resources
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\obj\Release\net7.0-windows\Dark The Finals.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\obj\Release\net7.0-windows\Dark The Finals.AssemblyInfoInputs.cache
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\obj\Release\net7.0-windows\Dark The Finals.AssemblyInfo.cs
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\obj\Release\net7.0-windows\Dark The Finals.csproj.CoreCompileInputs.cache
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\obj\Release\net7.0-windows\Dark The Finals.csproj.Fody.CopyLocal.cache
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\obj\Release\net7.0-windows\Dark The Finals.csproj.Fody.RuntimeCopyLocal.cache
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\obj\Release\net7.0-windows\Dark The.A9E826CA.Up2Date
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\obj\Release\net7.0-windows\Spotify.dll
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\obj\Release\net7.0-windows\refint\Spotify.dll
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\obj\Release\net7.0-windows\Dark The Finals.genruntimeconfig.cache
+C:\Users\jaycg\Desktop\The-Finals-AI-Cheat-main\The-Finals-AI-Cheat-main\Dark The Finals\obj\Release\net7.0-windows\ref\Spotify.dll
+C:\! A1\Ai aimbot\bin\Release\net7.0-windows\DirectML.dll
+C:\! A1\Ai aimbot\bin\Release\net7.0-windows\Spotify.exe
+C:\! A1\Ai aimbot\bin\Release\net7.0-windows\Spotify.dll.config
+C:\! A1\Ai aimbot\bin\Release\net7.0-windows\Spotify.deps.json
+C:\! A1\Ai aimbot\bin\Release\net7.0-windows\Spotify.runtimeconfig.json
+C:\! A1\Ai aimbot\bin\Release\net7.0-windows\Spotify.dll
+C:\! A1\Ai aimbot\bin\Release\net7.0-windows\runtimes\win-arm\native\onnxruntime.dll
+C:\! A1\Ai aimbot\bin\Release\net7.0-windows\runtimes\win-arm\native\onnxruntime.lib
+C:\! A1\Ai aimbot\bin\Release\net7.0-windows\runtimes\win-arm64\native\onnxruntime.dll
+C:\! A1\Ai aimbot\bin\Release\net7.0-windows\runtimes\win-arm64\native\onnxruntime.lib
+C:\! A1\Ai aimbot\bin\Release\net7.0-windows\runtimes\win-x64\native\onnxruntime.dll
+C:\! A1\Ai aimbot\bin\Release\net7.0-windows\runtimes\win-x64\native\onnxruntime.lib
+C:\! A1\Ai aimbot\bin\Release\net7.0-windows\runtimes\win-x86\native\onnxruntime.dll
+C:\! A1\Ai aimbot\bin\Release\net7.0-windows\runtimes\win-x86\native\onnxruntime.lib
+C:\! A1\Ai aimbot\obj\Release\net7.0-windows\Dark The Finals.csproj.AssemblyReference.cache
+C:\! A1\Ai aimbot\obj\Release\net7.0-windows\MainWindow.baml
+C:\! A1\Ai aimbot\obj\Release\net7.0-windows\UserController\AKeyChanger.baml
+C:\! A1\Ai aimbot\obj\Release\net7.0-windows\UserController\ALabel.baml
+C:\! A1\Ai aimbot\obj\Release\net7.0-windows\UserController\ASlider.baml
+C:\! A1\Ai aimbot\obj\Release\net7.0-windows\UserController\AToggle.baml
+C:\! A1\Ai aimbot\obj\Release\net7.0-windows\App.baml
+C:\! A1\Ai aimbot\obj\Release\net7.0-windows\MainWindow.g.cs
+C:\! A1\Ai aimbot\obj\Release\net7.0-windows\UserController\AKeyChanger.g.cs
+C:\! A1\Ai aimbot\obj\Release\net7.0-windows\UserController\ALabel.g.cs
+C:\! A1\Ai aimbot\obj\Release\net7.0-windows\UserController\ASlider.g.cs
+C:\! A1\Ai aimbot\obj\Release\net7.0-windows\UserController\AToggle.g.cs
+C:\! A1\Ai aimbot\obj\Release\net7.0-windows\App.g.cs
+C:\! A1\Ai aimbot\obj\Release\net7.0-windows\Spotify_MarkupCompile.cache
+C:\! A1\Ai aimbot\obj\Release\net7.0-windows\Spotify.g.resources
+C:\! A1\Ai aimbot\obj\Release\net7.0-windows\Dark The Finals.GeneratedMSBuildEditorConfig.editorconfig
+C:\! A1\Ai aimbot\obj\Release\net7.0-windows\Dark The Finals.AssemblyInfoInputs.cache
+C:\! A1\Ai aimbot\obj\Release\net7.0-windows\Dark The Finals.AssemblyInfo.cs
+C:\! A1\Ai aimbot\obj\Release\net7.0-windows\Dark The Finals.csproj.CoreCompileInputs.cache
+C:\! A1\Ai aimbot\obj\Release\net7.0-windows\Dark The Finals.csproj.Fody.CopyLocal.cache
+C:\! A1\Ai aimbot\obj\Release\net7.0-windows\Dark The Finals.csproj.Fody.RuntimeCopyLocal.cache
+C:\! A1\Ai aimbot\obj\Release\net7.0-windows\Dark The Finals.csproj.CopyComplete
+C:\! A1\Ai aimbot\obj\Release\net7.0-windows\Spotify.dll
+C:\! A1\Ai aimbot\obj\Release\net7.0-windows\refint\Spotify.dll
+C:\! A1\Ai aimbot\obj\Release\net7.0-windows\Dark The Finals.genruntimeconfig.cache
+C:\! A1\Ai aimbot\obj\Release\net7.0-windows\ref\Spotify.dll

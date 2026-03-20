@@ -1,0 +1,25 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "bypass-tx",
+  "outputfilename": "bypass-tx",
+  "frontend:install": "npm install",
+  "frontend:build": "npm run build",
+  "frontend:dev:watcher": "npm run dev",
+  "frontend:dev:serverUrl": "auto",
+  "author": {
+    "name": "bypass-tx",
+    "email": "bypass@example.com"
+  },
+  "window": {
+    "width": 300,
+    "height": 450,
+    "disableresize": false,
+    "frameless": true,
+    "alwaysontop": true,
+    "backgroundcolor": "rgba(0,0,0,0)",
+    "webengine_inspector": false
+  },
+  "bind": [
+    "App"
+  ]
+}

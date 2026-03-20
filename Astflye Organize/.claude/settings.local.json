@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bash \"C:/Users/Termux/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.5/skills/brainstorming/scripts/start-server.sh\" --project-dir \"c:/! A1/Astflye Organize\")",
+      "Bash(curl -s http://localhost:52947)",
+      "Bash(cmd.exe /c start http://localhost:52947)"
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>CS2 Cheat Menu</title>
+</head>
+<body>
+<div id="app" style="color: white; padding: 20px;">Carregando Astflye2...</div>
+<script>
+    console.log("HTML carregado, iniciando scripts...");
+    window.onerror = function(msg, url, line) {
+        document.getElementById('app').innerHTML = "ERRO JS: " + msg + " (Linha: " + line + ")";
+    };
+</script>
+<script src="./src/main.js" type="module"></script>
+</body>
+</html>
