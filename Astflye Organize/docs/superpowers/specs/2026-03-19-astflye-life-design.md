@@ -217,6 +217,7 @@ astflye-life/
 ```
 
 **Security constraints:**
+- `DISCORD_REDIRECT_URI` must be registered in the Discord Developer Portal → OAuth2 → Redirects whitelist before any login attempt will work
 - Discord client secret lives only in `server/.env`
 - JWT signing secret in `.env`, rotated on server restart optionally
 - No secrets in source code or committed files
