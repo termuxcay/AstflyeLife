@@ -29,3 +29,23 @@ Thumbs.db
 .worktrees/
 **/.worktrees/
 Astflye Organize/.worktrees/
+
+# Outros projetos — não pertencem ao AstflyeLife
+Ai aimbot/
+Bypass Valorant Boot/
+cs2-cheat-tx.bat/
+config/
+handlers/
+static/
+views/
+main.go
+go.mod
+go.sum
+README.md
+verificar melhorias possiveis front.txt
+
+# Ferramentas locais do Claude / Superpowers
+Astflye Organize/.claude/
+Astflye Organize/.superpowers/
+.claude/
+.superpowers/
