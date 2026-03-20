@@ -3,10 +3,11 @@ package models
 import "time"
 
 type Team struct {
-	ID        string    `gorm:"primaryKey" json:"id"`
-	Name      string    `gorm:"not null" json:"name"`
-	OwnerID   string    `gorm:"not null" json:"owner_id"`
-	CreatedAt time.Time `json:"created_at"`
+	ID          string    `gorm:"primaryKey" json:"id"`
+	Name        string    `gorm:"not null" json:"name"`
+	Description string    `json:"description"`
+	OwnerID     string    `gorm:"not null" json:"owner_id"`
+	CreatedAt   time.Time `json:"created_at"`
 }
 
 type TeamMember struct {

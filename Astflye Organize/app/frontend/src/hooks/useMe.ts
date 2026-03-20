@@ -5,6 +5,8 @@ export interface User {
   id: string
   username: string
   avatar: string
+  avatar_url?: string
+  discord_id?: string
   current_streak: number
   longest_streak: number
 }

@@ -2,10 +2,11 @@ import { Link, useLocation } from 'react-router-dom'
 import { useState } from 'react'
 
 const nav = [
-  { href: '/',         icon: '📋', label: 'Tasks'    },
-  { href: '/finance',  icon: '💰', label: 'Finance'  },
-  { href: '/social',   icon: '👥', label: 'Social'   },
-  { href: '/settings', icon: '⚙️',  label: 'Settings' },
+  { href: '/',         icon: '🏠', label: 'Dashboard' },
+  { href: '/tasks',    icon: '📋', label: 'Tasks'     },
+  { href: '/finance',  icon: '💰', label: 'Finance'   },
+  { href: '/social',   icon: '👥', label: 'Social'    },
+  { href: '/settings', icon: '⚙️',  label: 'Settings'  },
 ]
 
 export function Sidebar() {
@@ -40,7 +41,7 @@ export function Sidebar() {
 
       <nav className="flex flex-col gap-1 flex-1">
         {nav.map(({ href, icon, label }) => {
-          const active = pathname === href
+          const active = href === '/' ? pathname === '/' : pathname.startsWith(href)
           return (
             <Link
               key={href}

@@ -11,6 +11,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	fiberws "github.com/gofiber/websocket/v2"
 )
 
 func main() {
@@ -76,6 +77,32 @@ func main() {
 	api.Delete("/finance/transactions/:id", financeHandler.DeleteTransaction)
 	api.Get("/finance/summary", financeHandler.Summary)
 	api.Get("/finance/categories", financeHandler.Categories)
+
+	socialHandler := handlers.NewSocialHandler(database)
+	api.Post("/friends", socialHandler.SendFriendRequest)
+	api.Patch("/friends/:id", socialHandler.RespondToFriendRequest)
+	api.Get("/friends", socialHandler.ListFriends)
+	api.Post("/teams", socialHandler.CreateTeam)
+	api.Get("/teams", socialHandler.ListTeams)
+	api.Post("/teams/:id/invite", socialHandler.InviteToTeam)
+	api.Get("/teams/:id/messages", socialHandler.GetMessages)
+
+	// WebSocket — upgrade check middleware + handler
+	app.Use("/ws", func(c *fiber.Ctx) error {
+		if fiberws.IsWebSocketUpgrade(c) {
+			userID, err := middleware.ExtractUserID(c, cfg.JWTSecret)
+			if err != nil {
+				return c.Status(401).JSON(fiber.Map{"error": "unauthorized"})
+			}
+			c.Locals("userID", userID)
+			return c.Next()
+		}
+		return fiber.ErrUpgradeRequired
+	})
+	app.Get("/ws", fiberws.New(socialHandler.HandleWS))
+
+	assistantHandler := handlers.NewAssistantHandler(database)
+	api.Post("/assistant/ask", assistantHandler.Ask)
 
 	app.Get("/health", func(c *fiber.Ctx) error {
 		return c.JSON(fiber.Map{"status": "ok"})

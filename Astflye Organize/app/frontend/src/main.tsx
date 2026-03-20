@@ -10,6 +10,8 @@ import TasksPage from '@/pages/TasksPage'
 import NewTaskPage from '@/pages/NewTaskPage'
 import FinancePage from '@/pages/FinancePage'
 import NewTransactionPage from '@/pages/NewTransactionPage'
+import SocialPage from '@/pages/SocialPage'
+import SettingsPage from '@/pages/SettingsPage'
 import './index.css'
 
 const queryClient = new QueryClient()
@@ -36,6 +38,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                     <Route path="tasks/new" element={<NewTaskPage />} />
                     <Route path="finance" element={<FinancePage />} />
                     <Route path="finance/new" element={<NewTransactionPage />} />
+                    <Route path="social" element={<SocialPage />} />
+                    <Route path="settings" element={<SettingsPage />} />
                   </Routes>
                 </DashboardLayout>
               </ProtectedRoute>
