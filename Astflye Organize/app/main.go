@@ -2,6 +2,7 @@ package main
 
 import (
 	"embed"
+	"log"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
@@ -12,11 +13,17 @@ import (
 var assets embed.FS
 
 func main() {
-	app := NewApp()
-	err := wails.Run(&options.App{
+	cfg, err := loadConfig()
+	if err != nil {
+		log.Fatalf("config error: %v\n\nCrie o arquivo %%AppData%%\\Astflye\\.env com:\n  DISCORD_CLIENT_ID=...\n  DISCORD_CLIENT_SECRET=...\n  DISCORD_GUILD_ID=...\n  DISCORD_REDIRECT_URI=http://localhost:3005/auth/callback\n", err)
+	}
+
+	app := NewApp(cfg)
+
+	err = wails.Run(&options.App{
 		Title:  "Astflye Life",
-		Width:  1280,
-		Height: 800,
+		Width:  1440,
+		Height: 900,
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
