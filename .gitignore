@@ -27,4 +27,5 @@ Thumbs.db
 
 # Git worktrees
 .worktrees/
-*/.worktrees/
+**/.worktrees/
+Astflye Organize/.worktrees/
