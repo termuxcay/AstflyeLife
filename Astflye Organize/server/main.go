@@ -51,6 +51,10 @@ func main() {
 	})
 	userHandler := handlers.NewUserHandler(database)
 
+	app.Get("/health", func(c *fiber.Ctx) error {
+		return c.JSON(fiber.Map{"status": "ok"})
+	})
+
 	// Auth routes (rate-limited)
 	authGroup := app.Group("/auth", middleware.AuthRateLimit())
 	authGroup.Get("/login-url", authHandler.GetLoginURL)
@@ -103,10 +107,6 @@ func main() {
 
 	assistantHandler := handlers.NewAssistantHandler(database)
 	api.Post("/assistant/ask", assistantHandler.Ask)
-
-	app.Get("/health", func(c *fiber.Ctx) error {
-		return c.JSON(fiber.Map{"status": "ok"})
-	})
 
 	log.Printf("Astflye server starting on :%s", cfg.Port)
 	log.Fatal(app.Listen(":" + cfg.Port))

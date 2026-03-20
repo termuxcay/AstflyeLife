@@ -62,8 +62,18 @@ export default function LoginPage() {
     })
   }, [setTokens, navigate])
 
+  const SERVER_URL = import.meta.env.VITE_SERVER_URL ?? 'http://localhost:3005'
+
   const handleLogin = async () => {
-    await window.go?.main.App.StartLogin('http://localhost:34115')
+    // Running inside Wails desktop app
+    if (window.go?.main?.App?.StartLogin) {
+      await window.go.main.App.StartLogin(SERVER_URL)
+      return
+    }
+    // Running in browser (dev server) — open the login URL directly
+    const res = await fetch(`${SERVER_URL}/auth/login-url`)
+    const { url } = await res.json()
+    window.location.href = url
   }
 
   return (
