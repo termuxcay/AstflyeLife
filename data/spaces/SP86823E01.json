@@ -6,7 +6,19 @@
   "members": [
     "760962376916271105"
   ],
-  "tasks": [],
+  "tasks": [
+    {
+      "id": "ST5FCF4B2F",
+      "title": "dsds",
+      "assigned_to": "",
+      "status": "pending",
+      "priority": "urgent",
+      "due_date": "",
+      "note": "dssd",
+      "created_by": "760962376916271105",
+      "created_at": "2026-03-22T03:28:19Z"
+    }
+  ],
   "color": "#ff55aa",
   "created_at": "2026-03-22T03:27:34Z"
 }
