@@ -8,7 +8,18 @@
     "654327737980551188"
   ],
   "tasks": [],
-  "expenses": [],
+  "expenses": [
+    {
+      "id": "EX782364F0",
+      "paid_by": "760962376916271105",
+      "amount": 212,
+      "description": "dasdasd",
+      "date": "2026-03-25",
+      "entry_type": "expense",
+      "created_by": "760962376916271105",
+      "created_at": "2026-03-25T22:56:45Z"
+    }
+  ],
   "color": "#ff6464",
   "created_at": "2026-03-25T22:56:21Z"
 }
