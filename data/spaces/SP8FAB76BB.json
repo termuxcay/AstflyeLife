@@ -18,6 +18,16 @@
       "entry_type": "expense",
       "created_by": "760962376916271105",
       "created_at": "2026-03-25T22:56:45Z"
+    },
+    {
+      "id": "EX6E0D0C9D",
+      "paid_by": "760962376916271105",
+      "amount": 10000,
+      "description": "teste",
+      "date": "2026-03-25",
+      "entry_type": "income",
+      "created_by": "760962376916271105",
+      "created_at": "2026-03-25T22:56:58Z"
     }
   ],
   "color": "#ff6464",
